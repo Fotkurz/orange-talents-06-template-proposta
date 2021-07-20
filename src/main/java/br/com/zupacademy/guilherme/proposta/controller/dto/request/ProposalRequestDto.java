@@ -1,6 +1,7 @@
 package br.com.zupacademy.guilherme.proposta.controller.dto.request;
 
 import br.com.zupacademy.guilherme.proposta.domain.Proposal;
+import br.com.zupacademy.guilherme.proposta.validation.Unique;
 import br.com.zupacademy.guilherme.proposta.validation.ValidDocument;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,7 +14,7 @@ import java.math.BigDecimal;
 
 public class ProposalRequestDto {
 
-    @NotBlank @ValidDocument
+    @NotBlank @ValidDocument @Unique(fieldName = "document", clazz = Proposal.class)
     private String document;
     @NotBlank @Email
     private String email;

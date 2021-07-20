@@ -104,4 +104,17 @@ public class ProposalControllerTest {
                 .andExpect(MockMvcResultMatchers.status().is(400));
     }
 
+    @Test
+    @DisplayName("deveRetornar422CasoJáTenhaUmaPropostaComAqueleDocument")
+    public void test04() throws Exception {
+
+        mockMvc.perform(MockMvcRequestBuilders.post(proposalUri)
+                .contentType(MediaType.APPLICATION_JSON).content(jsonCorreto));
+        mockMvc.perform(MockMvcRequestBuilders.post(proposalUri)
+                .contentType(MediaType.APPLICATION_JSON).content(jsonCorreto))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().is(422));
+
+    }
+
 }
