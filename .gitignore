@@ -37,3 +37,8 @@ Dockerfile
 .Dockerfile.un~
 docker-compose.yml
 *.yml
+.mysql-dockerfile.un~
+dockerisaac/mysql-dockerfile
+dockerisaac/mysql-dockerfile~
+mysql-dockerfile
+mysql-dockerfile~

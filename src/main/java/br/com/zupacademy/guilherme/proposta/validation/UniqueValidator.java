@@ -23,7 +23,6 @@ public class UniqueValidator implements ConstraintValidator<Unique, Object> {
     public void initialize(Unique constraintAnnotation) {
         this.fieldName = constraintAnnotation.fieldName();
         this.clazz = constraintAnnotation.clazz();
-
     }
 
     @Override

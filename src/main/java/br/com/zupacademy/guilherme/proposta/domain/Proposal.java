@@ -2,9 +2,7 @@ package br.com.zupacademy.guilherme.proposta.domain;
 
 import br.com.zupacademy.guilherme.proposta.validation.ValidDocument;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -30,6 +28,9 @@ public class Proposal {
     @Positive
     private BigDecimal earnings;
 
+    @Enumerated(EnumType.STRING)
+    private Legible legible;
+
     @Deprecated
     public Proposal() { }
 
@@ -44,4 +45,18 @@ public class Proposal {
     public String getUUID() {
         return this.uuid;
     }
+
+    public String getDocument() {
+        return document;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void isLegible(Boolean respostaSolicitacao) {
+        if(respostaSolicitacao) this.legible = Legible.ELEGIVEL;
+        else this.legible = Legible.NAO_ELEGIVEL;
+    }
+
 }
