@@ -10,6 +10,10 @@ public class FormErrorDto {
         this.messages = messages;
     }
 
+    public FormErrorDto() {
+
+    }
+
     public Collection<String> getMessage() {
         return messages;
     }

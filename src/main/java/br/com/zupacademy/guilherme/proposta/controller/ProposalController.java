@@ -1,6 +1,7 @@
 package br.com.zupacademy.guilherme.proposta.controller;
 
 import br.com.zupacademy.guilherme.proposta.controller.dto.request.ProposalRequestDto;
+import br.com.zupacademy.guilherme.proposta.controller.dto.response.DetailedProposalDto;
 import br.com.zupacademy.guilherme.proposta.domain.Proposal;
 import br.com.zupacademy.guilherme.proposta.exception.ApiErrorException;
 import br.com.zupacademy.guilherme.proposta.feign.SolicitacaoFeignClient;
@@ -10,10 +11,7 @@ import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.persistence.EntityManager;
@@ -21,9 +19,10 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/proposals")
+@RequestMapping("/api/proposals")
 public class ProposalController {
 
     @PersistenceContext
@@ -39,7 +38,7 @@ public class ProposalController {
         try {
             Assert.notNull(proposalRequestDto, "Invalid Json");
             Proposal proposal = proposalRequestDto.toModel();
-            URI uri = uriComponentsBuilder.path("/proposals/{uuid}").buildAndExpand(proposal.getUUID()).toUri();
+            URI uri = uriComponentsBuilder.path("/api/proposals/{uuid}").buildAndExpand(proposal.getUUID()).toUri();
             try {
                 RequesterCheckingDto requesterCheckingDto = new RequesterCheckingDto(proposal);
                 ResponseCheckerDto responseCheckerDto = requester.request(requesterCheckingDto);
@@ -48,12 +47,20 @@ public class ProposalController {
             } catch(FeignException.UnprocessableEntity h){
                 proposal.isLegible(false);
             }
-
             entityManager.persist(proposal);
             return ResponseEntity.created(uri).build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
+    }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> detail(@PathVariable("id") String idProposal) {
+        Optional<Proposal> optionalProposal = Optional.ofNullable(entityManager.find(Proposal.class, idProposal));
+        if(optionalProposal.isPresent())  {
+            DetailedProposalDto dto = optionalProposal.get().detailProposal();
+            return ResponseEntity.ok().body(dto);
+        }
+        return ResponseEntity.notFound().build();
     }
 }

@@ -1,5 +1,6 @@
 package br.com.zupacademy.guilherme.proposta.domain;
 
+import br.com.zupacademy.guilherme.proposta.controller.dto.response.DetailedProposalDto;
 import br.com.zupacademy.guilherme.proposta.validation.ValidDocument;
 
 import javax.persistence.*;
@@ -66,4 +67,8 @@ public class Proposal {
         this.cardId = cardId;
     }
 
+    public DetailedProposalDto detailProposal() {
+        return new DetailedProposalDto(this.uuid, this.document, this.email, this.name,
+                this.address, this.earnings, this.legible.toString(), this.cardId);
+    }
 }
