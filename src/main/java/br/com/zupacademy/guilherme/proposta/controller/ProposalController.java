@@ -3,9 +3,9 @@ package br.com.zupacademy.guilherme.proposta.controller;
 import br.com.zupacademy.guilherme.proposta.controller.dto.request.ProposalRequestDto;
 import br.com.zupacademy.guilherme.proposta.domain.Proposal;
 import br.com.zupacademy.guilherme.proposta.exception.ApiErrorException;
-import br.com.zupacademy.guilherme.proposta.feign.Requester;
-import br.com.zupacademy.guilherme.proposta.feign.RequesterCheckingDto;
-import br.com.zupacademy.guilherme.proposta.feign.ResponseCheckerDto;
+import br.com.zupacademy.guilherme.proposta.feign.SolicitacaoFeignClient;
+import br.com.zupacademy.guilherme.proposta.feign.dto.RequesterCheckingDto;
+import br.com.zupacademy.guilherme.proposta.feign.dto.ResponseCheckerDto;
 import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +30,7 @@ public class ProposalController {
     private EntityManager entityManager;
 
     @Autowired
-    private Requester requester;
+    private SolicitacaoFeignClient requester;
 
     @PostMapping
     @Transactional

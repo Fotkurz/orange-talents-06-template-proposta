@@ -1,4 +1,4 @@
-package br.com.zupacademy.guilherme.proposta.feign;
+package br.com.zupacademy.guilherme.proposta.feign.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,6 +8,9 @@ public class ResponseCheckerDto {
     private String documento;
     private String nome;
     private String idProposta;
+
+    @JsonProperty(value = "id")
+    private String idCartao;
 
     @JsonCreator
     public ResponseCheckerDto(@JsonProperty("documento") String documento,
@@ -32,5 +35,11 @@ public class ResponseCheckerDto {
 
     public String getIdProposta() {
         return idProposta;
+    }
+
+    public String getIdCartao() { return idCartao; }
+
+    public void setIdCartao(String idCartao) {
+        this.idCartao = idCartao;
     }
 }

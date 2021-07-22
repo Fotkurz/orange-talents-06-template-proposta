@@ -1,4 +1,4 @@
-package br.com.zupacademy.guilherme.proposta.feign;
+package br.com.zupacademy.guilherme.proposta.feign.dto;
 
 import br.com.zupacademy.guilherme.proposta.domain.Proposal;
 

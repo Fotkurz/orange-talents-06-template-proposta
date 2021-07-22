@@ -28,8 +28,11 @@ public class Proposal {
     @Positive
     private BigDecimal earnings;
 
+    private String cardId;
+
     @Enumerated(EnumType.STRING)
     private Legible legible;
+
 
     @Deprecated
     public Proposal() { }
@@ -57,6 +60,10 @@ public class Proposal {
     public void isLegible(Boolean respostaSolicitacao) {
         if(respostaSolicitacao) this.legible = Legible.ELEGIVEL;
         else this.legible = Legible.NAO_ELEGIVEL;
+    }
+
+    public void setCardId(String cardId) {
+        this.cardId = cardId;
     }
 
 }
