@@ -18,7 +18,7 @@ public class SpringSchedulerConfiguration {
     @Autowired
     private CartaoFeignClient clientCartao;
 
-    @Scheduled(fixedDelay = 60000)
+    @Scheduled(fixedDelay = 10000)
     public void cardChecking() {
         CardChecker cardChecker = new CardChecker(proposalRepository, clientCartao);
         cardChecker.check();
