@@ -14,7 +14,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface Unique {
     String fieldName();
     Class<?> clazz();
-    String message() default "Falha na validação de valor único";
+    String message() default "unique constraint validation failed";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

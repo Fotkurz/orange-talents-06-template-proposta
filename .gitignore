@@ -42,3 +42,5 @@ dockerisaac/mysql-dockerfile
 dockerisaac/mysql-dockerfile~
 mysql-dockerfile
 mysql-dockerfile~
+.docker-compose.yml.un~
+docker-compose.yml

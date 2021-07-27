@@ -70,6 +70,8 @@ services:
       DB_PASSWORD: password
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: Pa55w0rd
+#      KEYCLOAK_FRONTEND_URL: http://keycloak:8080/auth
+#      PROXY_ADDRESS_FORWARDING: "true"
       POSTGRES_PORT_5432_TCP_ADDR: 127.0.0.1
 
   analise:
@@ -117,6 +119,9 @@ services:
       SPRING_PROFILES_ACTIVE: prod
       OPENFEIGN_CLIENT_SOLICITACOES: http://analise:9999
       OPENFEIGN_CLIENT_CARTOES: http://contas:8888
+      KEYCLOAK_ISSUER_URI: http://keycloak:8080/auth/realms/ot6realm
+      KEYCLOAK_JWKS_URI: http://keycloak:8080/auth/realms/ot6realm/protocol/openid-connect/certs
+
     depends_on:
       - mysql_db
 

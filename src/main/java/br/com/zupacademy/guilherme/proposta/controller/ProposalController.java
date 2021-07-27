@@ -63,4 +63,5 @@ public class ProposalController {
         }
         return ResponseEntity.notFound().build();
     }
+
 }

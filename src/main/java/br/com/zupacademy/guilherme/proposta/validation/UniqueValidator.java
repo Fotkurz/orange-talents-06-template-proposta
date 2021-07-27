@@ -35,6 +35,7 @@ public class UniqueValidator implements ConstraintValidator<Unique, Object> {
         } else {
             String message = campo + " already exists";
             throw new ApiErrorException(HttpStatus.UNPROCESSABLE_ENTITY, fieldName + " " + message);
+
         }
     }
 
