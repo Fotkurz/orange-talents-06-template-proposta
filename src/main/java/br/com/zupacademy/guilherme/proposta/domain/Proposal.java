@@ -8,12 +8,13 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
 @Table(name = "tbl_proposals")
-public class Proposal {
+public class Proposal implements Serializable {
 
     @Id
     private String uuid = UUID.randomUUID().toString();
@@ -61,6 +62,10 @@ public class Proposal {
     public void isLegible(Boolean respostaSolicitacao) {
         if(respostaSolicitacao) this.legible = Legible.ELEGIVEL;
         else this.legible = Legible.NAO_ELEGIVEL;
+    }
+
+    public String getCardId() {
+        return cardId;
     }
 
     public void setCardId(String cardId) {

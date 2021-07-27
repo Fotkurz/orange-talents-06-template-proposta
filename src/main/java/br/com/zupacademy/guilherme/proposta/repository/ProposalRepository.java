@@ -13,5 +13,6 @@ public interface ProposalRepository extends JpaRepository<Proposal, UUID> {
     @Query("SELECT p FROM Proposal p WHERE p.cardId = NULL")
     public List<Proposal> findAllCardIdIsNull();
 
+    @Query("SELECT p FROM Proposal p WHERE p.cardId = cardId")
     Proposal findByCardId(String cardId);
 }
