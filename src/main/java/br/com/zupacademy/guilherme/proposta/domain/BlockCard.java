@@ -37,6 +37,10 @@ public class BlockCard {
         return cardId;
     }
 
+    public void block(){
+        this.status = BlockStatus.BLOCKED;
+    }
+
     public boolean isBlocked() {
         return this.status == BlockStatus.BLOCKED;
     }
