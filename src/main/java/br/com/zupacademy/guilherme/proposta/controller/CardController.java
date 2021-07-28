@@ -7,6 +7,7 @@ import br.com.zupacademy.guilherme.proposta.domain.BlockCard;
 import br.com.zupacademy.guilherme.proposta.domain.Proposal;
 import br.com.zupacademy.guilherme.proposta.domain.TripWarning;
 import br.com.zupacademy.guilherme.proposta.feign.CartaoFeignClient;
+import br.com.zupacademy.guilherme.proposta.feign.dto.WarnResponseDto;
 import br.com.zupacademy.guilherme.proposta.repository.BlockCardRepository;
 import br.com.zupacademy.guilherme.proposta.repository.ProposalRepository;
 import br.com.zupacademy.guilherme.proposta.validation.ExistId;
@@ -14,14 +15,12 @@ import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.html.parser.Entity;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -52,10 +51,10 @@ public class CardController {
             Proposal proposal = proposalRepository.findByCardId(cardId);
             BlockRequestDto blockRequestDto = new BlockRequestDto(servletRequest.getRemoteAddr(), userAgent);
             BlockCard blockCard = blockRequestDto.toModel(proposal);
-            Map<String, String> map = new HashMap<>();
-            map.put("aplicacaoResponsavel", "Proposal");
+            Map<String, String> jsonRequest = new HashMap<>();
+            jsonRequest.put("aplicacaoResponsavel", "Proposal");
             try{
-                BlockResponseDto blockResponseDto = cartaoFeignClient.block(cardId, map);
+                BlockResponseDto blockResponseDto = cartaoFeignClient.block(cardId, jsonRequest);
                 if(blockResponseDto.isBlocked()) blockCard.block();
                 blockCardRepository.save(blockCard);
             }catch (FeignException.BadRequest | FeignException.InternalServerError e){
@@ -71,7 +70,11 @@ public class CardController {
                                      @RequestBody @Valid WarningRequest warningRequest,
                                      @RequestHeader("User-Agent") String userAgent){
         TripWarning tripWarning = warningRequest.toModel(cardId, servletRequest.getRemoteAddr(), userAgent);
-        entityManager.persist(tripWarning);
+        try {
+            WarnResponseDto warnResponseDto = cartaoFeignClient.warn(cardId, tripWarning.toLegacyRequest());
+            if(warnResponseDto.checkResponse()) entityManager.persist(tripWarning);
+        } catch (FeignException.BadRequest | FeignException.InternalServerError e) {
+        }
         return ResponseEntity.ok().build();
     }
 }

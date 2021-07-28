@@ -1,10 +1,11 @@
 package br.com.zupacademy.guilherme.proposta.domain;
 
+import br.com.zupacademy.guilherme.proposta.feign.dto.WarnRequestDto;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Future;
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -39,5 +40,9 @@ public class TripWarning {
         this.tripEndingDate = tripEndingDate;
         this.clientIp = clientIp;
         this.userAgent = userAgent;
+    }
+
+    public WarnRequestDto toLegacyRequest() {
+        return new WarnRequestDto(this.tripDestiny, this.tripEndingDate);
     }
 }
