@@ -1,7 +1,9 @@
 package br.com.zupacademy.guilherme.proposta.feign;
 
+import br.com.zupacademy.guilherme.proposta.controller.WalletResponseDto;
 import br.com.zupacademy.guilherme.proposta.controller.dto.response.BlockResponseDto;
 import br.com.zupacademy.guilherme.proposta.feign.dto.ResponseCardDto;
+import br.com.zupacademy.guilherme.proposta.feign.dto.WalletRequestDto;
 import br.com.zupacademy.guilherme.proposta.feign.dto.WarnRequestDto;
 import br.com.zupacademy.guilherme.proposta.feign.dto.WarnResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -20,4 +22,7 @@ public interface CartaoFeignClient {
 
     @RequestMapping(method = RequestMethod.POST, value ="/api/cartoes/{id}/avisos", consumes = "application/json")
     WarnResponseDto warn(@PathVariable(name="id") String idCard, @RequestBody WarnRequestDto warnRequestDto);
+
+    @RequestMapping(method = RequestMethod.POST, value ="/api/cartoes/{id}/carteiras", consumes = "application/json")
+    WalletResponseDto addToWallet(@PathVariable(name="id") String idCard, @RequestBody WalletRequestDto walletRequestDto);
 }
