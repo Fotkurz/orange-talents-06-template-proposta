@@ -1,9 +1,11 @@
 package br.com.zupacademy.guilherme.proposta.controller;
 
 import br.com.zupacademy.guilherme.proposta.controller.dto.request.BlockRequestDto;
+import br.com.zupacademy.guilherme.proposta.controller.dto.request.WarningRequest;
 import br.com.zupacademy.guilherme.proposta.controller.dto.response.BlockResponseDto;
 import br.com.zupacademy.guilherme.proposta.domain.BlockCard;
 import br.com.zupacademy.guilherme.proposta.domain.Proposal;
+import br.com.zupacademy.guilherme.proposta.domain.TripWarning;
 import br.com.zupacademy.guilherme.proposta.feign.CartaoFeignClient;
 import br.com.zupacademy.guilherme.proposta.repository.BlockCardRepository;
 import br.com.zupacademy.guilherme.proposta.repository.ProposalRepository;
@@ -12,13 +14,16 @@ import feign.FeignException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.html.parser.Entity;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -27,6 +32,8 @@ import java.util.Optional;
 @Validated
 public class CardController {
 
+    @PersistenceContext
+    private EntityManager entityManager;
     @Autowired
     private HttpServletRequest servletRequest;
     @Autowired
@@ -58,4 +65,13 @@ public class CardController {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
     }
 
+    @PostMapping("/api/cards/tripwarning/{cardId}")
+    @Transactional
+    public ResponseEntity<?> warning(@PathVariable("cardId") @ExistId(fieldName = "cardId", clazz = Proposal.class) String cardId,
+                                     @RequestBody @Valid WarningRequest warningRequest,
+                                     @RequestHeader("User-Agent") String userAgent){
+        TripWarning tripWarning = warningRequest.toModel(cardId, servletRequest.getRemoteAddr(), userAgent);
+        entityManager.persist(tripWarning);
+        return ResponseEntity.ok().build();
+    }
 }
