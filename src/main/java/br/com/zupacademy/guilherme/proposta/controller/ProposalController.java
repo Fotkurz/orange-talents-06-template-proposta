@@ -8,6 +8,9 @@ import br.com.zupacademy.guilherme.proposta.feign.SolicitacaoFeignClient;
 import br.com.zupacademy.guilherme.proposta.feign.dto.RequesterCheckingDto;
 import br.com.zupacademy.guilherme.proposta.feign.dto.ResponseCheckerDto;
 import feign.FeignException;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
@@ -31,6 +34,17 @@ public class ProposalController {
     @Autowired
     private SolicitacaoFeignClient requester;
 
+    private final MeterRegistry registry;
+    Counter proposalCounter;
+    Timer detailTimer;
+
+    public ProposalController(MeterRegistry registry){
+        this.registry = registry;
+        proposalCounter = registry.counter("proposal_counter");
+        detailTimer = registry.timer("proposal_detail_timer");
+
+    }
+
     @PostMapping
     @Transactional
     public ResponseEntity<?> create(@RequestBody @Valid ProposalRequestDto proposalRequestDto,
@@ -48,20 +62,24 @@ public class ProposalController {
                 proposal.isLegible(false);
             }
             entityManager.persist(proposal);
+            proposalCounter.increment();
             return ResponseEntity.created(uri).build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
+
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> detail(@PathVariable("id") String idProposal) {
-        Optional<Proposal> optionalProposal = Optional.ofNullable(entityManager.find(Proposal.class, idProposal));
-        if(optionalProposal.isPresent())  {
-            DetailedProposalDto dto = optionalProposal.get().detailProposal();
-            return ResponseEntity.ok().body(dto);
-        }
+        return detailTimer.record(() -> {
+            Optional<Proposal> optionalProposal = Optional.ofNullable(entityManager.find(Proposal.class, idProposal));
+            if(optionalProposal.isPresent())  {
+                DetailedProposalDto dto = optionalProposal.get().detailProposal();
+                return ResponseEntity.ok().body(dto);
+            }
         return ResponseEntity.notFound().build();
+        });
     }
 
 }
