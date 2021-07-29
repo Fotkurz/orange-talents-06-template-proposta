@@ -1,0 +1,25 @@
+global:
+  scrape_interval:     15s
+  evaluation_interval: 15s
+
+scrape_configs:
+
+  - job_name: 'transacoes'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['transacoes:7777']
+
+  - job_name: 'propostas'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['propostas:8080']
+    oauth2:
+      client_id: prometheus
+      client_secret: '9f7d379e-804d-4ec1-a6aa-9365c12bd838'
+      scopes:
+        - prometheus
+      token_url: http://keycloak:8080/auth/realms/ot6realm/protocol/openid-connect/token
+      endpoint_params:
+        username: prometheus
+        password: 123456
+        grant_type: password

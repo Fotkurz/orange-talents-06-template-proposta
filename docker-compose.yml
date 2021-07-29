@@ -52,8 +52,6 @@ services:
       - 19990:9990
     depends_on:
       # Just a delay to wait for postgres! This is not recommended!
-      - grafana
-      - prometheus
       - jaeger
       - kafka
       - zookeeper
@@ -71,7 +69,7 @@ services:
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: Pa55w0rd
       KEYCLOAK_FRONTEND_URL: http://keycloak:8080/auth
-      PROXY_ADDRESS_FORWARDING: "true"
+      PROXY_ADDRESS_FORWARDING: 'true'
       POSTGRES_PORT_5432_TCP_ADDR: 127.0.0.1
 
   analise:
@@ -121,9 +119,9 @@ services:
       OPENFEIGN_CLIENT_CARTOES: http://contas:8888
       KEYCLOAK_ISSUER_URI: http://keycloak:8080/auth/realms/ot6realm
       KEYCLOAK_JWKS_URI: http://keycloak:8080/auth/realms/ot6realm/protocol/openid-connect/certs
-      JAEGER_ENABLED: true
+      JAEGER_ENABLED: 'true'
+      JAEGER_SAMPLER: '1'
       JAEGER_ENDPOINT: http://jaeger:14268/api/traces
-      JAEGER_SAMPLER: 1
 
     depends_on:
       - mysql_db
@@ -147,15 +145,15 @@ services:
     volumes:
      - ./prometheus.yml:/etc/prometheus/prometheus.yml
      - prometheus-volume:/etc/prometheus/
-    network_mode: bridge
     ports:
       - "9090:9090"
+    depends_on:
+      - keycloak
 
   grafana:
     image: grafana/grafana
     volumes:
       - grafana-volume:/var/lib/grafana
-    network_mode: bridge
     ports:
       - "3000:3000"
     depends_on:
