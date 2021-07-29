@@ -1,14 +1,12 @@
 package br.com.zupacademy.guilherme.proposta.controller.dto.request;
 
 import br.com.zupacademy.guilherme.proposta.domain.DigitalWallet;
-import br.com.zupacademy.guilherme.proposta.domain.WalletType;
 import br.com.zupacademy.guilherme.proposta.feign.dto.WalletRequestDto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.util.Set;
 
 public class CardSaveRequest {
 

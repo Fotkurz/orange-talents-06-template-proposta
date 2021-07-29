@@ -121,6 +121,9 @@ services:
       OPENFEIGN_CLIENT_CARTOES: http://contas:8888
       KEYCLOAK_ISSUER_URI: http://keycloak:8080/auth/realms/ot6realm
       KEYCLOAK_JWKS_URI: http://keycloak:8080/auth/realms/ot6realm/protocol/openid-connect/certs
+      JAEGER_ENABLED: true
+      JAEGER_ENDPOINT: http://jaeger:14268/api/traces
+      JAEGER_SAMPLER: 1
 
     depends_on:
       - mysql_db
