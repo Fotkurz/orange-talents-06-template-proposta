@@ -42,14 +42,12 @@ public class ProposalController {
         this.registry = registry;
         proposalCounter = registry.counter("proposal_counter");
         detailTimer = registry.timer("proposal_detail_timer");
-
     }
 
     @PostMapping
     @Transactional
     public ResponseEntity<?> create(@RequestBody @Valid ProposalRequestDto proposalRequestDto,
                                     UriComponentsBuilder uriComponentsBuilder) throws ApiErrorException {
-        try {
             Assert.notNull(proposalRequestDto, "Invalid Json");
             Proposal proposal = proposalRequestDto.toModel();
             URI uri = uriComponentsBuilder.path("/api/proposals/{uuid}").buildAndExpand(proposal.getUUID()).toUri();
@@ -64,9 +62,6 @@ public class ProposalController {
             entityManager.persist(proposal);
             proposalCounter.increment();
             return ResponseEntity.created(uri).build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
 
     }
 

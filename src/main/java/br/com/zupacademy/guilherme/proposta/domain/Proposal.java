@@ -1,7 +1,8 @@
 package br.com.zupacademy.guilherme.proposta.domain;
 
 import br.com.zupacademy.guilherme.proposta.controller.dto.response.DetailedProposalDto;
-import br.com.zupacademy.guilherme.proposta.validation.ValidDocument;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -18,7 +19,7 @@ public class Proposal implements Serializable {
 
     @Id
     private String uuid = UUID.randomUUID().toString();
-    @NotBlank @ValidDocument
+    @NotBlank
     private String document;
     @NotBlank @Email
     private String email;
@@ -35,12 +36,11 @@ public class Proposal implements Serializable {
     @Enumerated(EnumType.STRING)
     private Legible legible;
 
-
     @Deprecated
     public Proposal() { }
 
     public Proposal(String document, String email, String name, String address, BigDecimal earnings) {
-        this.document = document;
+        this.document = encryptDocument(document);
         this.email = email;
         this.name = name;
         this.address = address;
@@ -72,8 +72,31 @@ public class Proposal implements Serializable {
         this.cardId = cardId;
     }
 
+    public String encryptDocument(String document) {
+        TextEncryptor textEncryptor = Encryptors.text("chave-secreta-ninja", "123456");
+        return textEncryptor.encrypt(document);
+    }
+
+    public String decryptDocument(String encoded) {
+        TextEncryptor textEncryptor = Encryptors.text("chave-secreta-ninja", "123456");
+        return fakeObfuscate(textEncryptor.decrypt(encoded));
+    }
+
+    public String fakeObfuscate(String decoded) {
+        String firstStep = decoded.substring(0, 2);
+        String lastStep = decoded.substring(decoded.length() - 2, decoded.length());
+        String obfuscate;
+        int size = decoded.length();
+        if(size == 15) {
+            obfuscate = firstStep + "*.***.***-" + lastStep;
+        }else {
+            obfuscate = firstStep + ".***.***/****-" + lastStep;
+        }
+        return obfuscate;
+    }
+
     public DetailedProposalDto detailProposal() {
-        return new DetailedProposalDto(this.uuid, this.document, this.email, this.name,
+        return new DetailedProposalDto(this.uuid, decryptDocument(this.document), this.email, this.name,
                 this.address, this.earnings, this.legible.toString(), this.cardId);
     }
 }
