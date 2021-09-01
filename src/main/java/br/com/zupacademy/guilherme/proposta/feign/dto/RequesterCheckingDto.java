@@ -1,6 +1,8 @@
 package br.com.zupacademy.guilherme.proposta.feign.dto;
 
 import br.com.zupacademy.guilherme.proposta.domain.Proposal;
+import org.springframework.security.crypto.encrypt.Encryptors;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 
 public class RequesterCheckingDto {
 
@@ -9,7 +11,8 @@ public class RequesterCheckingDto {
     private String idProposta;
 
     public RequesterCheckingDto(Proposal proposal) {
-        this.documento = proposal.getDocument();
+        TextEncryptor textEncryptor = Encryptors.text("chave-secreta-ninja", "123456");
+        this.documento = textEncryptor.decrypt(proposal.getDocument());
         this.nome = proposal.getName();
         this.idProposta = proposal.getUUID();
     }

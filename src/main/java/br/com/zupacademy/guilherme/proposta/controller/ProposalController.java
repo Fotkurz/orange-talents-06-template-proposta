@@ -48,6 +48,7 @@ public class ProposalController {
     @Transactional
     public ResponseEntity<?> create(@RequestBody @Valid ProposalRequestDto proposalRequestDto,
                                     UriComponentsBuilder uriComponentsBuilder) throws ApiErrorException {
+
             Assert.notNull(proposalRequestDto, "Invalid Json");
             Proposal proposal = proposalRequestDto.toModel();
             URI uri = uriComponentsBuilder.path("/api/proposals/{uuid}").buildAndExpand(proposal.getUUID()).toUri();
